@@ -34,7 +34,7 @@ public:
     string getContacto() const { return contacto; }
 
     string infoAluno() const {
-        return "Escola: " + this->escola + ", Id Matricula: " + this->idMatricula + ", Email: " + this->contacto;
+        return "Escola: " + getEscola() + ", Id Matricula: " + getIdMatricula() + ", Email: " + getContacto();
     }
 
 };
@@ -55,7 +55,7 @@ public:
 
     bool levantarDinheiro(float montante) {
         if (montante > 0 && saldo >= montante) {
-            saldo -= montante;
+            saldo -= montante + 0.5;
             return true;
         }
         return false;
@@ -92,16 +92,17 @@ public:
         ContaCartao(nome, numBI, anoNascimento, numConta, estado, saldo),
         desconto_lev(desconto_lev), bonos_dep(bonos_dep) {}
 
-    float getDescontoLev() const { return this->desconto_lev; }
-    float getBonosDep() const { return this->bonos_dep; }
+    float getDescontoLev() const { return 0.3; }
+    float getBonosDep() const { return 0.2; }
 
     bool levantarDinheiro(float montante) {
-        montante -= montante * this->desconto_lev;
+        montante -= getDescontoLev();
         return ContaCartao::levantarDinheiro(montante);
     }
 
     bool depositarDinheiro(float montante) {
         // Corrigindo a chamada para depositarDinheiro da classe base
+        montante += getBonosDep();
         return ContaCartao::depositarDinheiro(montante);
     }
 
@@ -114,8 +115,8 @@ public:
 int main() {
     vector<ContaAluno> alunos;
 
-    alunos.push_back(ContaAluno("Joao da Silva", "123456789", 1998, "Escola ABC", "12345", "email1@gmail.com", "987654321", true, 1000.0, 0.5, 0.2));
-    alunos.push_back(ContaAluno("Maria Oliveira", "987654321", 2000, "Escola XYZ", "54321", "email2@gmail.com", "123456789", true, 1500.0, 0.5, 0.2));
+    alunos.push_back(ContaAluno("Joao Joao", "123456789", 1998, "Escola ABC", "12345", "email1@gmail.com", "987654321", true, 1000.0, 0, 0));
+    alunos.push_back(ContaAluno("Maria Maria", "987654321", 2000, "Escola XYZ", "54321", "email2@gmail.com", "123456789", true, 1500.0, 0, 0));
 
     int opcao;
     float montante;
@@ -138,7 +139,7 @@ int main() {
                 cout << "Info Aluno: " << aluno.infoAluno() << endl;
                 cout << "Numero da Conta: " << aluno.getNumConta() << endl;
                 cout << "Estado da Conta: " << (aluno.getEstado() ? "Ativa" : "Inativa") << endl;
-                cout << "Saldo Inicial: " << aluno.getSaldo() << endl;
+                cout << "Saldo: " << aluno.getSaldo() << endl;
                 cout << endl;
             }
             break;
