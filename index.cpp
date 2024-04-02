@@ -10,6 +10,7 @@ protected:
     int anoNascimento;
 
 public:
+    DadosPessoa() : nome(""), numBI(""), anoNascimento(0) {}
     DadosPessoa(string nome, string numBI, int anoNascimento)
         : nome(nome), numBI(numBI), anoNascimento(anoNascimento) {}
 
@@ -18,7 +19,7 @@ public:
     int getAnoNascimento() const { return anoNascimento; }
 };
 
-class Aluno : public DadosPessoa {
+class Aluno : virtual public DadosPessoa {
 private:
     string escola;
     string idMatricula;
@@ -38,7 +39,7 @@ public:
 
 };
 
-class ContaCartao : public DadosPessoa {
+class ContaCartao : virtual public DadosPessoa {
 private:
     string numConta;
     bool estado;
@@ -87,7 +88,7 @@ private:
 public:
     ContaAluno(string nome, string numBI, int anoNascimento, string escola, string idMatricula, string contacto,
         string numConta, bool estado, float saldo, float desconto_lev, float bonos_dep)
-        : Aluno(nome, numBI, anoNascimento, escola, idMatricula, contacto),
+        : DadosPessoa(nome, numBI, anoNascimento), Aluno(nome, numBI, anoNascimento, escola, idMatricula, contacto),
         ContaCartao(nome, numBI, anoNascimento, numConta, estado, saldo),
         desconto_lev(desconto_lev), bonos_dep(bonos_dep) {}
 
@@ -104,7 +105,7 @@ public:
         return ContaCartao::depositarDinheiro(montante);
     }
 
-    bool transferirDinheiro(float montante, ContaAluno& contaDest) {
+    bool transferirDinheiro(float montante, ContaCartao& contaDest) {
         return ContaCartao::transferirDinheiro(montante, contaDest);
     }
 
@@ -131,12 +132,12 @@ int main() {
         case 1:
             cout << "\nInformacoes de todas as contas:" << endl;
             for (const auto& aluno : alunos) {
-                cout << "Nome: " << aluno.DadosPessoa::getNome() << endl;
-                cout << "Num BI: " << aluno.DadosPessoa::getNumBI() << endl;
-                cout << "Ano de Nascimento: " << aluno.DadosPessoa::getAnoNascimento() << endl;
+                cout << "Nome: " << aluno.getNome() << endl;
+                cout << "Num BI: " << aluno.getNumBI() << endl;
+                cout << "Ano de Nascimento: " << aluno.getAnoNascimento() << endl;
                 cout << "Info Aluno: " << aluno.infoAluno() << endl;
                 cout << "Numero da Conta: " << aluno.getNumConta() << endl;
-                cout << "Estado da Conta: " << (aluno.getEstado() ? "Ativaa" : "Inativa") << endl;
+                cout << "Estado da Conta: " << (aluno.getEstado() ? "Ativa" : "Inativa") << endl;
                 cout << "Saldo Inicial: " << aluno.getSaldo() << endl;
                 cout << endl;
             }
@@ -155,10 +156,10 @@ int main() {
                 for (auto& aluno : alunos) {
                     if (aluno.getNumConta() == numContaOrigem) {
                         if (aluno.levantarDinheiro(montante)) {
-                            cout << "Deposito efetuado com sucesso. Saldo atual: " << aluno.getSaldo() << endl;
+                            cout << "Levantamento efetuado com sucesso. Saldo atual: " << aluno.getSaldo() << endl;
                         }
                         else {
-                            cout << "Erro ao depositar dinheiro." << endl;
+                            cout << "Erro ao levantar dinheiro." << endl;
                         }
                         break;
                     }
