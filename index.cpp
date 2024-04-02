@@ -45,7 +45,7 @@ private:
     float saldo;
 
 public:
-    ContaCartao()
+    ContaCartao(string nome, string numBI, int anoNascimento, string numConta, bool estado, float saldo)
         : DadosPessoa(nome, numBI, anoNascimento), numConta(numConta), estado(estado), saldo(saldo) {}
 
     string getNumConta() const { return numConta; }
